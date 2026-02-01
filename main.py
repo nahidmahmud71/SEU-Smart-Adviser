@@ -14,11 +14,11 @@ st.set_page_config(
 # ================= 2. ADVANCED CSS & ANIMATIONS =================
 st.markdown("""
 <style>
-    /* Global Animation */
+    /* Global Fade-In Animation */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .stApp { animation: fadeIn 0.6s ease-in-out; }
+    .stApp { animation: fadeIn 0.8s ease-in-out; }
 
-    /* Header Styling */
+    /* Modern Gradient Header */
     .main-header {
         font-size: 3rem;
         font-weight: 800;
@@ -26,11 +26,11 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         text-shadow: 0px 4px 15px rgba(0, 114, 255, 0.3);
     }
 
-    /* Sidebar Profile Card */
+    /* Glassmorphism Sidebar Profile */
     .profile-card {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -46,15 +46,15 @@ st.markdown("""
     
     .profile-img {
         border-radius: 50%;
-        width: 130px;
-        height: 130px;
+        width: 140px;
+        height: 140px;
         border: 4px solid #00C6FF;
         padding: 4px;
         object-fit: cover;
         box-shadow: 0 0 15px rgba(0, 198, 255, 0.6);
     }
 
-    /* Metric Box */
+    /* Dashboard Metric Boxes */
     .metric-box {
         background: #1E1E1E;
         padding: 20px;
@@ -70,7 +70,7 @@ st.markdown("""
         box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
     }
 
-    /* Custom Buttons */
+    /* Custom Gradient Buttons */
     .stButton>button {
         background: linear-gradient(90deg, #00C6FF, #0072FF);
         color: white;
@@ -86,7 +86,16 @@ st.markdown("""
         box-shadow: 0 5px 15px rgba(0, 114, 255, 0.5);
     }
 
-    /* Result Card for CGPA */
+    /* CGPA Input Section Styling */
+    .cgpa-container {
+        background-color: #262730;
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid #333;
+        margin-bottom: 20px;
+    }
+
+    /* CGPA Result Card */
     .result-card {
         background: linear-gradient(135deg, #1E1E1E, #252525);
         padding: 30px;
@@ -94,22 +103,14 @@ st.markdown("""
         border: 1px solid #333;
         text-align: center;
         margin-top: 20px;
-        box-shadow: 0 0 20px rgba(0, 198, 255, 0.2);
-    }
-    
-    /* Input Areas */
-    .input-section {
-        background-color: #262730;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 20px;
-        border: 1px solid #333;
+        box-shadow: 0 0 30px rgba(0, 198, 255, 0.15);
+        animation: fadeIn 1s;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ================= 3. DATA & FUNCTIONS =================
-# Raw Links for Images
+# Raw Links from GitHub (Ensure exact filenames)
 PROFILE_PIC = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4180.jpg"
 ROUTE_MAP_1 = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4559.jpeg"
 ROUTE_MAP_2 = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4560.jpeg"
@@ -139,18 +140,18 @@ def check_conflict(routine_list):
                     return True
     return False
 
-# --- ROBUST CURRICULUM LOADER (FIX FOR COURSE ADVISER) ---
-# This ensures the app works even if curriculum.csv is missing
+# --- EMERGENCY BACKUP CURRICULUM ---
+# This ensures Course Adviser works even if CSV is missing
 try:
     curr_df = pd.read_csv("curriculum.csv")
     curr_df['Prerequisite'] = curr_df['Prerequisite'].fillna('None')
 except:
-    # FALLBACK DATA: Essential CSE Courses
+    # Manual Backup Data for CSE
     data = {
-        'Course Code': ['CSE111', 'CSE121', 'CSE122', 'EEE111', 'MAT101', 'MAT102', 'ENG101', 'CSE211', 'CSE221', 'CSE281', 'MAT201'],
-        'Course Title': ['Computer Fund.', 'Programming I', 'Programming II', 'Electrical Ckt', 'Diff Calc', 'Int Calc', 'English I', 'Data Structure', 'Algorithms', 'Digital Logic', 'Coord Geom'],
-        'Credits': [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0],
-        'Prerequisite': ['None', 'None', 'CSE121', 'MAT101', 'None', 'MAT101', 'None', 'CSE122', 'CSE211', 'CSE122', 'MAT102']
+        'Course Code': ['CSE111', 'CSE121', 'CSE122', 'EEE111', 'MAT101', 'MAT102', 'ENG101', 'CSE211', 'CSE221', 'CSE281', 'MAT201', 'PHY101'],
+        'Course Title': ['Computer Fundamentals', 'Structured Prog.', 'OOP', 'Electrical Ckt', 'Diff Calc', 'Int Calc', 'English I', 'Data Structure', 'Algorithms', 'Digital Logic', 'Coord Geometry', 'Physics I'],
+        'Credits': [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0],
+        'Prerequisite': ['None', 'None', 'CSE121', 'MAT101', 'None', 'MAT101', 'None', 'CSE122', 'CSE211', 'CSE122', 'MAT102', 'MAT101']
     }
     curr_df = pd.DataFrame(data)
 
@@ -159,11 +160,11 @@ with st.sidebar:
     st.markdown(f"""
     <div class="profile-card">
         <img src="{PROFILE_PIC}" class="profile-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
-        <h2 style="color: white; margin: 10px 0 0 0;">Nahid Mahmud</h2>
+        <h2 style="color: white; margin: 15px 0 5px 0;">Nahid Mahmud</h2>
         <p style="color: #00C6FF; font-weight: bold; margin: 0;">CSE Batch 67</p>
         <p style="color: #aaa; font-size: 13px;">ID: 2024100000194</p>
         <br>
-        <div style="background: linear-gradient(90deg, #28a745, #20c997); padding: 5px; border-radius: 15px; display: inline-block;">
+        <div style="background: linear-gradient(90deg, #28a745, #20c997); padding: 5px 15px; border-radius: 15px; display: inline-block;">
             <span style="color: white; font-weight: bold; font-size: 12px;">Active Student</span>
         </div>
     </div>
@@ -175,7 +176,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
     st.divider()
-    st.caption("© 2026 SEU Smart Portal | v8.0 Final")
+    st.caption("© 2026 SEU Smart Portal | v9.0 Ultimate")
 
 # ================= 5. MAIN CONTENT =================
 
@@ -197,7 +198,7 @@ if menu == "🏠 Dashboard":
         st.subheader("⏳ Academic Countdown")
         days_left = (date(2026, 2, 25) - date.today()).days
         if days_left > 0:
-            st.info(f"🔥 **Mid-Term Exam** in **{days_left} Days!**")
+            st.info(f"🔥 **Mid-Term Exam** in **{days_left} Days!** (Feb 25)")
             st.progress(max(0, 100 - days_left*2))
         else:
             st.success("Exams are Ongoing!")
@@ -206,78 +207,87 @@ if menu == "🏠 Dashboard":
         st.subheader("📢 Notices")
         st.warning("💳 **Feb 15:** 2nd Installment Deadline")
 
-# --- 🧮 CGPA CALCULATOR (TOTALLY REVAMPED) ---
+# --- 🧮 CGPA CALCULATOR (RE-DESIGNED) ---
 elif menu == "🧮 CGPA Calculator":
     st.markdown("<div class='main-header'>🧮 Advanced CGPA Calculator</div>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#bbb;'>Calculate your semester GPA accurately with easy inputs.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#bbb; margin-bottom:30px;'>Calculate your Semester GPA with separate Theory & Lab inputs.</p>", unsafe_allow_html=True)
     
-    # Grading Scale Reference
-    with st.expander("ℹ️ View SEU Grading Scale"):
+    # Grading Scale Toggle
+    with st.expander("ℹ️ View Grading Scale Reference"):
         st.table(pd.DataFrame({
             "Marks": ["80+", "75-79", "70-74", "65-69", "60-64", "55-59", "50-54", "40-49", "<40"],
             "Grade": ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "F"],
             "Point": [4.00, 3.75, 3.50, 3.25, 3.00, 2.75, 2.50, 2.00, 0.00]
         }))
 
-    st.write("---")
-    
-    # Input Section
+    # Inputs Layout
     col_theory, col_lab = st.columns(2)
     
-    credits = []
-    points = []
+    credits_list = []
+    points_list = []
     
+    # THEORY SECTION
     with col_theory:
-        st.markdown("<div class='input-section'>", unsafe_allow_html=True)
+        st.markdown("<div class='cgpa-container'>", unsafe_allow_html=True)
         st.subheader("📘 Theory Courses")
         st.caption("Standard 3.0 Credit Courses")
-        num_theory = st.number_input("How many Theory courses?", 1, 6, 4)
+        
+        num_theory = st.number_input("Count", 1, 6, 4, key="nt")
         
         for i in range(num_theory):
             c1, c2 = st.columns([1, 2])
-            with c1: st.markdown(f"**Subject {i+1}**")
+            with c1: st.write(f"**Theory {i+1}**")
             with c2: 
-                g = st.selectbox(f"Select Grade", [4.0, 3.75, 3.5, 3.25, 3.0, 2.5, 2.0, 0.0], key=f"tg{i}")
-                credits.append(3.0)
-                points.append(3.0 * g)
+                g = st.selectbox(f"Grade", [4.0, 3.75, 3.5, 3.25, 3.0, 2.5, 2.0, 0.0], key=f"tg{i}")
+                credits_list.append(3.0)
+                points_list.append(3.0 * g)
             st.markdown("---")
         st.markdown("</div>", unsafe_allow_html=True)
 
+    # LAB SECTION
     with col_lab:
-        st.markdown("<div class='input-section'>", unsafe_allow_html=True)
+        st.markdown("<div class='cgpa-container'>", unsafe_allow_html=True)
         st.subheader("🧪 Lab / Sessional")
-        st.caption("Labs or Projects (1.0 - 2.0 Credits)")
-        num_lab = st.number_input("How many Lab courses?", 0, 4, 1)
+        st.caption("Variable Credits (1.0 - 2.0)")
+        
+        num_lab = st.number_input("Count", 0, 4, 1, key="nl")
         
         for i in range(num_lab):
             c1, c2, c3 = st.columns([1, 1, 2])
-            with c1: st.markdown(f"**Lab {i+1}**")
+            with c1: st.write(f"**Lab {i+1}**")
             with c2: cr = st.selectbox("Cr", [1.0, 1.5, 2.0], key=f"lcr{i}")
             with c3: 
                 g = st.selectbox(f"Grade", [4.0, 3.75, 3.5, 3.25, 3.0, 2.5, 2.0, 0.0], key=f"lg{i}")
-                credits.append(cr)
-                points.append(cr * g)
+                credits_list.append(cr)
+                points_list.append(cr * g)
             st.markdown("---")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Calculation Button
-    if st.button("🚀 Calculate Result", type="primary"):
-        total_cr = sum(credits)
-        total_pts = sum(points)
-        sgpa = total_pts / total_cr if total_cr > 0 else 0.0
+    # Calculate Button
+    if st.button("🚀 Calculate SGPA", type="primary"):
+        total_cr = sum(credits_list)
+        total_pts = sum(points_list)
         
-        # Fancy Result Display
-        st.markdown(f"""
-        <div class="result-card">
-            <h3 style="color: #aaa; margin:0;">Your Semester GPA</h3>
-            <h1 style="color: #00C6FF; font-size: 4rem; margin: 10px 0; font-weight:800;">{sgpa:.2f}</h1>
-            <p style="font-size: 1.2rem;">Total Credits: <b style="color:#fff">{total_cr}</b> | Total Points: <b style="color:#fff">{total_pts:.2f}</b></p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if sgpa >= 3.80: st.balloons()
-        elif sgpa >= 3.00: st.success("Good job! Keep it up.")
-        else: st.warning("Push harder next semester!")
+        if total_cr > 0:
+            sgpa = total_pts / total_cr
+            
+            # Beautiful Result Card
+            st.markdown(f"""
+            <div class="result-card">
+                <h3 style="color: #aaa; margin:0; text-transform: uppercase; letter-spacing: 2px;">Your Semester GPA</h3>
+                <h1 style="color: #00C6FF; font-size: 5rem; margin: 10px 0; font-weight: 800; text-shadow: 0 0 20px rgba(0,198,255,0.5);">{sgpa:.2f}</h1>
+                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
+                    <div><p style="color: #aaa; margin:0;">Total Credits</p><h3 style="margin:0;">{total_cr}</h3></div>
+                    <div><p style="color: #aaa; margin:0;">Total Points</p><h3 style="margin:0;">{total_pts:.2f}</h3></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if sgpa >= 3.80: st.balloons()
+            elif sgpa >= 3.00: st.success("Great job! Keep it up.")
+            else: st.warning("You need to push harder next time!")
+        else:
+            st.error("Please add at least one course.")
 
 # --- 📘 COURSE ADVISER (FIXED) ---
 elif menu == "📘 Course Adviser":
@@ -295,7 +305,7 @@ elif menu == "📘 Course Adviser":
             
             if course in completed: continue
             
-            # Logic Fix
+            # Fixed Logic for NaN/None
             if prereqs == 'None' or prereqs == 'nan':
                 eligible.append(row)
             else:
@@ -304,7 +314,7 @@ elif menu == "📘 Course Adviser":
                     eligible.append(row)
         
         if eligible:
-            st.success(f"🎉 You can take these {len(eligible)} courses:")
+            st.success(f"🎉 Recommended Courses ({len(eligible)} Available):")
             st.dataframe(pd.DataFrame(eligible)[['Course Code', 'Course Title', 'Credits', 'Prerequisite']], use_container_width=True)
         else:
             st.warning("⚠️ No new courses found based on your selection.")
@@ -372,13 +382,14 @@ elif menu == "🚌 Bus & Map":
         
     with t2:
         c1, c2 = st.columns(2)
-        with c1: st.image(ROUTE_MAP_1, caption="Route 1", use_container_width=True)
-        with c2: st.image(ROUTE_MAP_2, caption="Route 2", use_container_width=True)
+        with c1: st.image(ROUTE_MAP_1, caption="Route 1: Azimpur", use_container_width=True)
+        with c2: st.image(ROUTE_MAP_2, caption="Route 2: Uttara", use_container_width=True)
 
 # --- 👨‍🏫 FACULTY ---
 elif menu == "👨‍🏫 Faculty Info":
     st.header("👨‍🏫 Faculty Directory")
     st.table(pd.DataFrame([
         {"Name": "Shahriar Manzoor", "Role": "Chairman", "Email": "cse.chair@seu.edu.bd"},
-        {"Name": "Dr. Gazi Zahirul", "Role": "Professor", "Email": "gazi.islam@seu.edu.bd"}
+        {"Name": "Dr. Gazi Zahirul", "Role": "Professor", "Email": "gazi.islam@seu.edu.bd"},
+        {"Name": "Md. Shohel Babu", "Role": "Coordinator", "Email": "shohel@seu.edu.bd"}
     ]))
