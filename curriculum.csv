@@ -1,0 +1,29 @@
+Course Code,Course Title,Prerequisite,Credits
+CSE141,Computer Fundamentals,None,3
+CSE161,Programming Language I,CSE141,3
+CSE162,Programming Language I Lab,CSE141,1
+CSE181,Discrete Mathematics,CSE161;CSE162,3
+CSE241,Data Structures,CSE181,3
+CSE242,Data Structures Lab,CSE181,1
+CSE263,Digital Logic Design,CSE181,3
+CSE265,Algorithm,CSE241;CSE242,3
+CSE266,Algorithm Lab,CSE241;CSE242,1
+CSE281,Prog Language II (Java),CSE161;CSE162,3
+CSE282,Prog Language II Lab,CSE161;CSE162,1
+CSE365,Artificial Intelligence,CSE265,3
+CSE441,Theory of Computing,CSE265,3
+CSE359,Graph Theory,CSE265,3
+CSE353,Introduction to Data Mining,CSE265,3
+CSE343,Computer Architecture,CSE263,3
+CSE361,Operating Systems,CSE363,3
+MAT141,Diff & Integral Calculus,None,3
+MAT161,Coord Geometry & Vector,MAT141,3
+MAT241,Complex Variables,MAT141,3
+MAT261,Linear Algebra,MAT241,3
+ENG101,Basic Composition,None,3
+ENG102,Intermediate Composition,ENG101,3
+ENG103,Advanced English Skills,ENG102,3
+EEE181,Electrical Circuits Design I,None,3
+EEE241,Electronic Devices & Circuits,EEE181,3
+ETE281,Communication Theory,MAT241;EEE241,3
+CSE341,Computer Networking,ETE281,3
