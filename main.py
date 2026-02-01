@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 # ================= 1. PAGE CONFIGURATION =================
 st.set_page_config(
-    page_title="SEU Smart Portal | Nahid",
+    page_title="SEU Student Portal Pro",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -14,7 +14,6 @@ st.set_page_config(
 # ================= 2. PROFESSIONAL STYLING (CSS) =================
 st.markdown("""
 <style>
-    /* Global Styles */
     .main-header {
         font-size: 2.2rem; 
         font-weight: 700; 
@@ -116,7 +115,7 @@ with st.sidebar:
     )
     
     st.divider()
-    st.caption("© 2026 SEU Smart Portal | v3.0 Pro")
+    st.caption("© 2026 SEU Smart Portal | v4.0 Pro")
 
 # ================= 5. MAIN CONTENT =================
 
@@ -130,7 +129,7 @@ if menu == "🏠 Dashboard":
     with c1: st.markdown("<div class='metric-box'><h4>Current CGPA</h4><h2>3.80</h2></div>", unsafe_allow_html=True)
     with c2: st.markdown("<div class='metric-box'><h4>Completed Cr.</h4><h2>45/150</h2></div>", unsafe_allow_html=True)
     with c3: st.markdown("<div class='metric-box'><h4>Next Payment</h4><h2>Feb 15</h2></div>", unsafe_allow_html=True)
-    with c4: st.markdown("<div class='metric-box'><h4>Waiver</h4><h2>40%</h2></div>", unsafe_allow_html=True)
+    with c4: st.markdown("<div class='metric-box'><h4>Waiver</h4><h2>20%</h2></div>", unsafe_allow_html=True)
 
     st.markdown("### 🚀 Quick Actions")
     col1, col2 = st.columns(2)
@@ -228,11 +227,11 @@ elif menu == "📅 Routine Maker":
 # --- 💰 TUITION CALCULATOR ---
 elif menu == "💰 Tuition Calculator":
     st.header("💸 SEU Tuition Fee Calculator")
-    st.markdown("Calculate your exact payable amount including **Waiver & Extra Costs**.")
+    st.markdown("Updated rates for **Spring 2026** (Approximate).")
     
-    # Tuition Rates (Updated for Spring 2026 Approx)
+    # SEU Official Rates (Updated)
     dept_rates = {
-        "CSE": 3500, "EEE": 3400, "BBA": 3200, "English": 2500, "Textile": 3000, "Pharmacy": 4000
+        "CSE": 4750, "EEE": 3450, "Textile": 3300, "BBA": 4950, "English": 3700, "Pharmacy": 5350, "Architecture": 4250
     }
     
     col1, col2 = st.columns(2)
@@ -240,7 +239,7 @@ elif menu == "💰 Tuition Calculator":
     with col1:
         st.subheader("📝 Course Details")
         dept = st.selectbox("Department", list(dept_rates.keys()))
-        per_credit = st.number_input("Cost Per Credit (BDT)", value=dept_rates[dept], step=100)
+        per_credit = st.number_input("Cost Per Credit (BDT)", value=dept_rates[dept], step=50)
         credits = st.number_input("Total Credits Taking", min_value=3, max_value=20, value=12)
         
         st.subheader("🎁 Waiver Percentage")
@@ -248,8 +247,8 @@ elif menu == "💰 Tuition Calculator":
         
     with col2:
         st.subheader("➕ Additional Semester Costs")
-        semester_fee = st.number_input("Semester Fee (Fixed)", value=6000, help="Library, Student Activity, etc.")
-        lab_fee = st.number_input("Lab Fee (Total)", value=3000, help="Usually 1500-3000 based on labs.")
+        semester_fee = st.number_input("Semester Fee (Student Activity etc.)", value=6000, help="Usually charged per semester.")
+        lab_fee = st.number_input("Lab Fee (Total)", value=2500, help="Varies by courses taken.")
         bus_fee = st.number_input("Transport/Bus Fee", value=0)
         other_fee = st.number_input("Club/Other Fees", value=0)
 
@@ -286,32 +285,45 @@ elif menu == "💰 Tuition Calculator":
         </div>
         """, unsafe_allow_html=True)
 
-# --- 🗺️ CAMPUS MAP ---
+# --- 🗺️ CAMPUS MAP (UPGRADED) ---
 elif menu == "🗺️ Campus Map":
     st.header("📍 SEU Permanent Campus (Tejgaon)")
     
     col1, col2 = st.columns([3, 1])
     with col1:
-        # SEU Coordinates
-        seu_map = pd.DataFrame({'lat': [23.768603], 'lon': [90.402638]})
+        # Exact Coordinates for SEU Tejgaon Campus
+        seu_map = pd.DataFrame({
+            'lat': [23.7692668], 
+            'lon': [90.4049922]
+        })
         st.map(seu_map, zoom=16)
     
     with col2:
-        st.info("**Address:**\n251/A & 252, Tejgaon I/A, Dhaka-1208, Bangladesh")
-        st.write("**Contact:** 02-8878502")
-        st.link_button("🚗 Google Maps Direction", "https://goo.gl/maps/ExampleLink")
+        st.info("**Address:**\n251/A & 252, Tejgaon Industrial Area, Dhaka-1208, Bangladesh")
+        st.write("**Contact:** 02-226603610-7")
+        st.link_button("🚗 Google Maps Direction", "https://maps.app.goo.gl/YourSEUMapLink")
 
-# --- 👨‍🏫 FACULTY INFO ---
+# --- 👨‍🏫 FACULTY INFO (REAL DATA) ---
 elif menu == "👨‍🏫 Faculty Info":
     st.header("👨‍🏫 CSE Faculty Members")
+    st.caption("Data collected from SEU Official Website")
     
+    # Real Data from Search
     fac_data = [
-        {"Name": "Shahriar Manzoor", "Designation": "Chairman & Assoc. Prof", "Room": "402", "Email": "chairman@seu.edu.bd"},
-        {"Name": "Dr. Gazi Zahirul Islam", "Designation": "Professor", "Room": "405", "Email": "zahirul@seu.edu.bd"},
-        {"Name": "Md. Shohel Babu", "Designation": "Lecturer (Coordinator)", "Room": "301", "Email": "shohel@seu.edu.bd"},
-        {"Name": "Lameya Islam", "Designation": "Lecturer", "Room": "302", "Email": "lameya@seu.edu.bd"},
+        {"Name": "Shahriar Manzoor", "Designation": "Chairman & Associate Professor", "Room": "530 (5th Floor)", "Phone": "02226603610-7 (Ext: 666)", "Email": "cse.chair@seu.edu.bd"},
+        {"Name": "Dr. Gazi Zahirul Islam", "Designation": "Associate Professor", "Room": "606 (6th Floor)", "Phone": "N/A", "Email": "gazi.islam@seu.edu.bd"},
+        {"Name": "Dr. Mohammed Ashikur Rahman", "Designation": "Coordinator & Assoc. Prof.", "Room": "529 (5th Floor)", "Phone": "N/A", "Email": "ashikur.rahman@seu.edu.bd"},
+        {"Name": "Dr. Md. Ruhul Amin", "Designation": "Associate Professor", "Room": "813 (8th Floor)", "Phone": "N/A", "Email": "dr.mdruhulamin@seu.edu.bd"},
+        {"Name": "Mohammad Ashraful Hoque", "Designation": "Assistant Professor", "Room": "529 (5th Floor)", "Phone": "Ext: 667", "Email": "ashraful@seu.edu.bd"},
+        {"Name": "Shifat Ahmed", "Designation": "Assistant Professor", "Room": "529 (5th Floor)", "Phone": "Ext: 668", "Email": "shifat.ahmed@seu.edu.bd"},
+        {"Name": "Khandaker Mohammad Mohi Uddin", "Designation": "Assistant Professor", "Room": "328 (3rd Floor)", "Phone": "N/A", "Email": "mohiuddin.kh@seu.edu.bd"},
+        {"Name": "Md. Mijanur Rahman", "Designation": "Assistant Professor", "Room": "606 (6th Floor)", "Phone": "N/A", "Email": "mijanur.rahman@seu.edu.bd"},
+        {"Name": "Mahbub Hasan", "Designation": "Lecturer", "Room": "328 (3rd Floor)", "Phone": "N/A", "Email": "mahbub.hasan@seu.edu.bd"},
     ]
-    st.table(pd.DataFrame(fac_data))
+    
+    # Display as Table
+    df_fac = pd.DataFrame(fac_data)
+    st.table(df_fac)
 
 # --- 🧮 CGPA CALCULATOR ---
 elif menu == "🧮 CGPA Calculator":
