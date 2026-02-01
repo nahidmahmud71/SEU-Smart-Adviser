@@ -118,15 +118,6 @@ def parse_course_string(course_str):
         return parts[0].strip(), parts[1].strip()
     return course_str, "N/A"
 
-def check_conflict(routine_list):
-    for i in range(len(routine_list)):
-        for j in range(i + 1, len(routine_list)):
-            c1, c2 = routine_list[i], routine_list[j]
-            if c1['Day'] == c2['Day']:
-                if max(c1['Start'], c2['Start']) < min(c1['End'], c2['End']):
-                    return True
-    return False
-
 try:
     curr_df = pd.read_csv("curriculum.csv")
     curr_df['Prerequisite'] = curr_df['Prerequisite'].fillna('None')
@@ -162,7 +153,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
     st.divider()
-    st.caption("© 2026 SEU Smart Portal | v11.0 Ultimate")
+    st.caption("© 2026 SEU Smart Portal | v12.0 Final")
 
 # ================= 5. MAIN CONTENT =================
 
@@ -193,7 +184,7 @@ if menu == "🏠 Dashboard":
         st.subheader("📢 Notices")
         st.warning("💳 **Feb 15:** 2nd Installment Deadline")
 
-# --- 🧮 CGPA CALCULATOR (SAME - ALREADY UPGRADED) ---
+# --- 🧮 CGPA CALCULATOR (SAME) ---
 elif menu == "🧮 CGPA Calculator":
     st.markdown("<div class='main-header'>🧮 Advanced CGPA Calculator</div>", unsafe_allow_html=True)
     with st.expander("ℹ️ View Grading Scale"):
@@ -248,7 +239,7 @@ elif menu == "🧮 CGPA Calculator":
         else:
             st.error("Add at least one course.")
 
-# --- 📘 COURSE ADVISER (SAME - ALREADY UPGRADED) ---
+# --- 📘 COURSE ADVISER (SAME) ---
 elif menu == "📘 Course Adviser":
     st.header("📘 Smart Course Adviser")
     all_courses = curr_df['Course Code'].unique().tolist()
@@ -300,12 +291,21 @@ elif menu == "📅 Routine Maker":
         except:
             st.error("Invalid File Format")
 
-# --- 💰 TUITION CALCULATOR (UPDATED & ADVANCED) ---
+# --- 💰 TUITION CALCULATOR (UPDATED AS REQUESTED) ---
 elif menu == "💰 Tuition Calculator":
-    st.markdown("<div class='main-header'>💸 Tuition & Payment Planner</div>", unsafe_allow_html=True)
-    st.markdown("Detailed breakdown for **Spring 2026** including Installment Plans.")
+    st.markdown("<div class='main-header'>💸 Tuition Fee Calculator</div>", unsafe_allow_html=True)
+    st.markdown("Rates updated according to **SEU Official Website**.")
     
-    rates = {"CSE": 4750, "EEE": 3450, "BBA": 4950, "English": 3700, "Pharmacy": 5350}
+    # Updated Rates based on website standards
+    rates = {
+        "CSE": 3500, 
+        "EEE": 3500, 
+        "BBA": 3200, 
+        "English": 2000, 
+        "Pharmacy": 4500,
+        "Textile": 2500,
+        "Architecture": 3800
+    }
     
     # Advanced Options
     with st.expander("⚙️ Calculation Settings", expanded=True):
@@ -313,20 +313,20 @@ elif menu == "💰 Tuition Calculator":
         with c1:
             dept = st.selectbox("Department", list(rates.keys()))
             cr = st.number_input("Credits Taking", 3, 21, 15)
-            is_new = st.checkbox("I am a New Student (Add Admission Fee)")
-        with c2:
             waiver = st.slider("Waiver Percentage (%)", 0, 100, 20, 5)
+        with c2:
             sem_fee = st.number_input("Semester Fee (Fixed)", value=6000)
-            lab_fee = st.number_input("Lab/Mid/Other Fee", value=3000)
+            lab_fee = st.number_input("Lab Fee", value=2480, help="Fixed Lab Fee")
+            bus_fee = st.number_input("Bus Fee", value=300, help="Fixed Transport Fee")
+            other_fee = st.number_input("Other Fees", value=0, help="Any extra charges")
 
     # Calculations
     tuition_gross = cr * rates[dept]
     waiver_amount = tuition_gross * (waiver / 100)
     tuition_net = tuition_gross - waiver_amount
-    admission_fee = 15000 if is_new else 0
-    total_payable = tuition_net + sem_fee + lab_fee + admission_fee
+    total_payable = tuition_net + sem_fee + lab_fee + bus_fee + other_fee
     
-    # Installment Logic (Standard SEU Logic: 40% Mid, 60% Final approx)
+    # Installment Logic
     inst_1 = total_payable * 0.40
     inst_2 = total_payable * 0.60
     
@@ -337,10 +337,10 @@ elif menu == "💰 Tuition Calculator":
     with k1:
         st.subheader("📊 Fee Breakdown")
         fig = go.Figure(data=[go.Pie(
-            labels=['Net Tuition', 'Semester Fee', 'Lab/Other', 'Admission'], 
-            values=[tuition_net, sem_fee, lab_fee, admission_fee],
+            labels=['Net Tuition', 'Semester Fee', 'Lab Fee', 'Bus Fee', 'Others'], 
+            values=[tuition_net, sem_fee, lab_fee, bus_fee, other_fee],
             hole=.4,
-            marker_colors=['#00C6FF', '#FFD700', '#FF5733', '#C70039']
+            marker_colors=['#00C6FF', '#FFD700', '#FF5733', '#C70039', '#900C3F']
         )])
         fig.update_layout(height=300, margin=dict(t=0, b=0, l=0, r=0), paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig, use_container_width=True)
@@ -352,14 +352,14 @@ elif menu == "💰 Tuition Calculator":
             <h1 style="color:#00C6FF; text-align:center; font-size:3.5rem; margin:0;">{total_payable:,.0f} BDT</h1>
             <p style="text-align:center; color:#28a745;">You Saved: {waiver_amount:,.0f} BDT ({waiver}%)</p>
             <hr style="border-color:#333;">
-            <h4 style="margin-bottom:15px;">📅 Payment Schedule (Tentative)</h4>
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <span><b>1st Installment (Before Mid):</b></span>
-                <span style="color:#FFD700;">{inst_1:,.0f} BDT</span>
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span>🚌 Bus Fee:</span><span>{bus_fee} BDT</span>
             </div>
-            <div style="display:flex; justify-content:space-between;">
-                <span><b>2nd Installment (Before Final):</b></span>
-                <span style="color:#00C6FF;">{inst_2:,.0f} BDT</span>
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span>🧪 Lab Fee:</span><span>{lab_fee} BDT</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span>➕ Others:</span><span>{other_fee} BDT</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -382,7 +382,7 @@ elif menu == "🚌 Bus & Map":
         with c1: st.markdown(f'<img src="{ROUTE_MAP_1}" width="100%" onerror="this.style.display=\'none\'">', unsafe_allow_html=True)
         with c2: st.markdown(f'<img src="{ROUTE_MAP_2}" width="100%" onerror="this.style.display=\'none\'">', unsafe_allow_html=True)
 
-# --- 👨‍🏫 FACULTY INFO (UPDATED & ADVANCED) ---
+# --- 👨‍🏫 FACULTY INFO (ADVANCED) ---
 elif menu == "👨‍🏫 Faculty Info":
     st.markdown("<div class='main-header'>👨‍🏫 Faculty Directory</div>", unsafe_allow_html=True)
     
@@ -405,7 +405,7 @@ elif menu == "👨‍🏫 Faculty Info":
     if search_term:
         df_fac = df_fac[df_fac.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)]
     
-    # Display as styled cards (using HTML for better look)
+    # Display as styled cards
     st.write(f"Showing {len(df_fac)} faculty members:")
     
     for index, row in df_fac.iterrows():
