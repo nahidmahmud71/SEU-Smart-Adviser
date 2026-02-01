@@ -14,11 +14,10 @@ st.set_page_config(
 # ================= 2. ADVANCED CSS & ANIMATIONS =================
 st.markdown("""
 <style>
-    /* Global Fade-In Animation */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .stApp { animation: fadeIn 0.8s ease-in-out; }
 
-    /* Modern Gradient Header */
+    /* Gradient Header */
     .main-header {
         font-size: 3rem;
         font-weight: 800;
@@ -30,7 +29,7 @@ st.markdown("""
         text-shadow: 0px 4px 15px rgba(0, 114, 255, 0.3);
     }
 
-    /* Glassmorphism Sidebar Profile */
+    /* Glassmorphism Profile */
     .profile-card {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -40,21 +39,25 @@ st.markdown("""
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
-        transition: transform 0.3s;
     }
-    .profile-card:hover { transform: translateY(-5px); }
     
-    .profile-img {
-        border-radius: 50%;
+    /* Image Styling */
+    .profile-img-container {
         width: 140px;
         height: 140px;
+        margin: 0 auto;
+        border-radius: 50%;
+        overflow: hidden;
         border: 4px solid #00C6FF;
-        padding: 4px;
-        object-fit: cover;
         box-shadow: 0 0 15px rgba(0, 198, 255, 0.6);
     }
+    .profile-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-    /* Dashboard Metric Boxes */
+    /* Metric Box */
     .metric-box {
         background: #1E1E1E;
         padding: 20px;
@@ -65,12 +68,12 @@ st.markdown("""
         transition: 0.3s;
     }
     .metric-box:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
         border-left-color: #0072FF;
         box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
     }
 
-    /* Custom Gradient Buttons */
+    /* Buttons */
     .stButton>button {
         background: linear-gradient(90deg, #00C6FF, #0072FF);
         color: white;
@@ -79,23 +82,9 @@ st.markdown("""
         font-weight: bold;
         padding: 12px;
         width: 100%;
-        transition: all 0.3s ease;
     }
-    .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 5px 15px rgba(0, 114, 255, 0.5);
-    }
-
-    /* CGPA Input Section Styling */
-    .cgpa-container {
-        background-color: #262730;
-        padding: 20px;
-        border-radius: 15px;
-        border: 1px solid #333;
-        margin-bottom: 20px;
-    }
-
-    /* CGPA Result Card */
+    
+    /* Result Card */
     .result-card {
         background: linear-gradient(135deg, #1E1E1E, #252525);
         padding: 30px;
@@ -104,13 +93,12 @@ st.markdown("""
         text-align: center;
         margin-top: 20px;
         box-shadow: 0 0 30px rgba(0, 198, 255, 0.15);
-        animation: fadeIn 1s;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ================= 3. DATA & FUNCTIONS =================
-# Raw Links from GitHub (Ensure exact filenames)
+# LINK CORRECTION: Using raw.githubusercontent.com
 PROFILE_PIC = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4180.jpg"
 ROUTE_MAP_1 = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4559.jpeg"
 ROUTE_MAP_2 = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4560.jpeg"
@@ -140,13 +128,12 @@ def check_conflict(routine_list):
                     return True
     return False
 
-# --- EMERGENCY BACKUP CURRICULUM ---
-# This ensures Course Adviser works even if CSV is missing
+# --- ROBUST CURRICULUM LOADER ---
 try:
     curr_df = pd.read_csv("curriculum.csv")
     curr_df['Prerequisite'] = curr_df['Prerequisite'].fillna('None')
 except:
-    # Manual Backup Data for CSE
+    # Emergency Backup Data (Ensures no crash)
     data = {
         'Course Code': ['CSE111', 'CSE121', 'CSE122', 'EEE111', 'MAT101', 'MAT102', 'ENG101', 'CSE211', 'CSE221', 'CSE281', 'MAT201', 'PHY101'],
         'Course Title': ['Computer Fundamentals', 'Structured Prog.', 'OOP', 'Electrical Ckt', 'Diff Calc', 'Int Calc', 'English I', 'Data Structure', 'Algorithms', 'Digital Logic', 'Coord Geometry', 'Physics I'],
@@ -157,9 +144,12 @@ except:
 
 # ================= 4. SIDEBAR =================
 with st.sidebar:
+    # HTML Image with Error Handling (Fixes broken image issue)
     st.markdown(f"""
     <div class="profile-card">
-        <img src="{PROFILE_PIC}" class="profile-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
+        <div class="profile-img-container">
+            <img src="{PROFILE_PIC}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png';">
+        </div>
         <h2 style="color: white; margin: 15px 0 5px 0;">Nahid Mahmud</h2>
         <p style="color: #00C6FF; font-weight: bold; margin: 0;">CSE Batch 67</p>
         <p style="color: #aaa; font-size: 13px;">ID: 2024100000194</p>
@@ -176,7 +166,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
     st.divider()
-    st.caption("© 2026 SEU Smart Portal | v9.0 Ultimate")
+    st.caption("© 2026 SEU Smart Portal | v10.0 Final")
 
 # ================= 5. MAIN CONTENT =================
 
@@ -207,33 +197,25 @@ if menu == "🏠 Dashboard":
         st.subheader("📢 Notices")
         st.warning("💳 **Feb 15:** 2nd Installment Deadline")
 
-# --- 🧮 CGPA CALCULATOR (RE-DESIGNED) ---
+# --- 🧮 CGPA CALCULATOR (Advanced) ---
 elif menu == "🧮 CGPA Calculator":
     st.markdown("<div class='main-header'>🧮 Advanced CGPA Calculator</div>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#bbb; margin-bottom:30px;'>Calculate your Semester GPA with separate Theory & Lab inputs.</p>", unsafe_allow_html=True)
     
-    # Grading Scale Toggle
-    with st.expander("ℹ️ View Grading Scale Reference"):
+    # Toggle Reference
+    with st.expander("ℹ️ View Grading Scale"):
         st.table(pd.DataFrame({
             "Marks": ["80+", "75-79", "70-74", "65-69", "60-64", "55-59", "50-54", "40-49", "<40"],
             "Grade": ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "F"],
             "Point": [4.00, 3.75, 3.50, 3.25, 3.00, 2.75, 2.50, 2.00, 0.00]
         }))
 
-    # Inputs Layout
     col_theory, col_lab = st.columns(2)
-    
     credits_list = []
     points_list = []
     
-    # THEORY SECTION
     with col_theory:
-        st.markdown("<div class='cgpa-container'>", unsafe_allow_html=True)
-        st.subheader("📘 Theory Courses")
-        st.caption("Standard 3.0 Credit Courses")
-        
+        st.markdown("### 📘 Theory Courses")
         num_theory = st.number_input("Count", 1, 6, 4, key="nt")
-        
         for i in range(num_theory):
             c1, c2 = st.columns([1, 2])
             with c1: st.write(f"**Theory {i+1}**")
@@ -241,17 +223,11 @@ elif menu == "🧮 CGPA Calculator":
                 g = st.selectbox(f"Grade", [4.0, 3.75, 3.5, 3.25, 3.0, 2.5, 2.0, 0.0], key=f"tg{i}")
                 credits_list.append(3.0)
                 points_list.append(3.0 * g)
-            st.markdown("---")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.divider()
 
-    # LAB SECTION
     with col_lab:
-        st.markdown("<div class='cgpa-container'>", unsafe_allow_html=True)
-        st.subheader("🧪 Lab / Sessional")
-        st.caption("Variable Credits (1.0 - 2.0)")
-        
+        st.markdown("### 🧪 Lab / Sessional")
         num_lab = st.number_input("Count", 0, 4, 1, key="nl")
-        
         for i in range(num_lab):
             c1, c2, c3 = st.columns([1, 1, 2])
             with c1: st.write(f"**Lab {i+1}**")
@@ -260,42 +236,37 @@ elif menu == "🧮 CGPA Calculator":
                 g = st.selectbox(f"Grade", [4.0, 3.75, 3.5, 3.25, 3.0, 2.5, 2.0, 0.0], key=f"lg{i}")
                 credits_list.append(cr)
                 points_list.append(cr * g)
-            st.markdown("---")
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.divider()
 
-    # Calculate Button
     if st.button("🚀 Calculate SGPA", type="primary"):
         total_cr = sum(credits_list)
         total_pts = sum(points_list)
         
         if total_cr > 0:
             sgpa = total_pts / total_cr
-            
-            # Beautiful Result Card
             st.markdown(f"""
             <div class="result-card">
-                <h3 style="color: #aaa; margin:0; text-transform: uppercase; letter-spacing: 2px;">Your Semester GPA</h3>
-                <h1 style="color: #00C6FF; font-size: 5rem; margin: 10px 0; font-weight: 800; text-shadow: 0 0 20px rgba(0,198,255,0.5);">{sgpa:.2f}</h1>
-                <div style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
-                    <div><p style="color: #aaa; margin:0;">Total Credits</p><h3 style="margin:0;">{total_cr}</h3></div>
-                    <div><p style="color: #aaa; margin:0;">Total Points</p><h3 style="margin:0;">{total_pts:.2f}</h3></div>
-                </div>
+                <h3 style="color:#aaa;">Your Semester GPA</h3>
+                <h1 style="color:#00C6FF; font-size:5rem; margin:0; text-shadow:0 0 20px rgba(0,198,255,0.5);">{sgpa:.2f}</h1>
+                <p>Total Credits: {total_cr}</p>
             </div>
             """, unsafe_allow_html=True)
-            
             if sgpa >= 3.80: st.balloons()
-            elif sgpa >= 3.00: st.success("Great job! Keep it up.")
-            else: st.warning("You need to push harder next time!")
         else:
-            st.error("Please add at least one course.")
+            st.error("Add at least one course.")
 
-# --- 📘 COURSE ADVISER (FIXED) ---
+# --- 📘 COURSE ADVISER (CRASH FIXED) ---
 elif menu == "📘 Course Adviser":
     st.header("📘 Smart Course Adviser")
-    st.info("Select completed courses to see what opens up next.")
     
-    all_courses = curr_df['Course Code'].tolist()
-    completed = st.multiselect("Completed Courses:", all_courses, default=['CSE111', 'ENG101', 'MAT101'])
+    # 🔴 FIX: Ensure Default Options Actually Exist in the List
+    all_courses = curr_df['Course Code'].unique().tolist()
+    
+    # Only select defaults if they exist in the curriculum
+    default_selection = ['CSE111', 'ENG101', 'MAT101']
+    valid_defaults = [c for c in default_selection if c in all_courses]
+
+    completed = st.multiselect("Completed Courses:", all_courses, default=valid_defaults)
     
     if st.button("Check Eligibility 🔍"):
         eligible = []
@@ -305,7 +276,6 @@ elif menu == "📘 Course Adviser":
             
             if course in completed: continue
             
-            # Fixed Logic for NaN/None
             if prereqs == 'None' or prereqs == 'nan':
                 eligible.append(row)
             else:
@@ -317,7 +287,7 @@ elif menu == "📘 Course Adviser":
             st.success(f"🎉 Recommended Courses ({len(eligible)} Available):")
             st.dataframe(pd.DataFrame(eligible)[['Course Code', 'Course Title', 'Credits', 'Prerequisite']], use_container_width=True)
         else:
-            st.warning("⚠️ No new courses found based on your selection.")
+            st.warning("No new courses found.")
 
 # --- 📅 ROUTINE MAKER ---
 elif menu == "📅 Routine Maker":
@@ -342,28 +312,27 @@ elif menu == "📅 Routine Maker":
                     st.success("Routine Generated!")
                     st.dataframe(relevant[['Course String', 'Day', 'Time', 'Faculty']])
                 else:
-                    st.warning("No courses selected or found in file.")
+                    st.warning("No courses found.")
         except:
             st.error("Invalid File Format")
 
 # --- 💰 TUITION CALCULATOR ---
 elif menu == "💰 Tuition Calculator":
     st.header("💸 Tuition Calculator")
-    rates = {"CSE": 4750, "EEE": 3450, "BBA": 4950, "English": 3700}
+    rates = {"CSE": 4750, "EEE": 3450, "BBA": 4950}
     
     c1, c2 = st.columns(2)
     with c1:
         dept = st.selectbox("Department", list(rates.keys()))
-        cr = st.number_input("Total Credits", 3, 21, 12)
+        cr = st.number_input("Credits", 3, 21, 12)
         waiver = st.select_slider("Waiver %", [0, 20, 40, 50, 60, 100], value=20)
     with c2:
         sem_fee = st.number_input("Semester Fee", value=6000)
         lab_fee = st.number_input("Lab Fee", value=2500)
 
-    net_tuition = (cr * rates[dept]) * ((100-waiver)/100)
-    total = net_tuition + sem_fee + lab_fee
-    
-    st.markdown(f"<div class='result-card'><h1>Total: {total:,.0f} BDT</h1><p>You Saved: {(cr*rates[dept])*(waiver/100):,.0f} BDT</p></div>", unsafe_allow_html=True)
+    net = (cr * rates[dept]) * ((100-waiver)/100)
+    total = net + sem_fee + lab_fee
+    st.markdown(f"<div class='result-card'><h1>Total: {total:,.0f} BDT</h1></div>", unsafe_allow_html=True)
 
 # --- 🚌 BUS & MAP ---
 elif menu == "🚌 Bus & Map":
@@ -382,14 +351,14 @@ elif menu == "🚌 Bus & Map":
         
     with t2:
         c1, c2 = st.columns(2)
-        with c1: st.image(ROUTE_MAP_1, caption="Route 1: Azimpur", use_container_width=True)
-        with c2: st.image(ROUTE_MAP_2, caption="Route 2: Uttara", use_container_width=True)
+        # Using HTML img tag for fallback support
+        with c1: st.markdown(f'<img src="{ROUTE_MAP_1}" width="100%" onerror="this.style.display=\'none\'">', unsafe_allow_html=True)
+        with c2: st.markdown(f'<img src="{ROUTE_MAP_2}" width="100%" onerror="this.style.display=\'none\'">', unsafe_allow_html=True)
 
 # --- 👨‍🏫 FACULTY ---
 elif menu == "👨‍🏫 Faculty Info":
     st.header("👨‍🏫 Faculty Directory")
     st.table(pd.DataFrame([
         {"Name": "Shahriar Manzoor", "Role": "Chairman", "Email": "cse.chair@seu.edu.bd"},
-        {"Name": "Dr. Gazi Zahirul", "Role": "Professor", "Email": "gazi.islam@seu.edu.bd"},
-        {"Name": "Md. Shohel Babu", "Role": "Coordinator", "Email": "shohel@seu.edu.bd"}
+        {"Name": "Dr. Gazi Zahirul", "Role": "Professor", "Email": "gazi.islam@seu.edu.bd"}
     ]))
