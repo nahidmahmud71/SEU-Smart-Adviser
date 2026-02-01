@@ -98,7 +98,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ================= 3. DATA & FUNCTIONS =================
-# LINK CORRECTION: Using raw.githubusercontent.com
 PROFILE_PIC = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4180.jpg"
 ROUTE_MAP_1 = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4559.jpeg"
 ROUTE_MAP_2 = "https://raw.githubusercontent.com/nahidmahmud71/SEU-Smart-Adviser/main/IMG_4560.jpeg"
@@ -128,12 +127,10 @@ def check_conflict(routine_list):
                     return True
     return False
 
-# --- ROBUST CURRICULUM LOADER ---
 try:
     curr_df = pd.read_csv("curriculum.csv")
     curr_df['Prerequisite'] = curr_df['Prerequisite'].fillna('None')
 except:
-    # Emergency Backup Data (Ensures no crash)
     data = {
         'Course Code': ['CSE111', 'CSE121', 'CSE122', 'EEE111', 'MAT101', 'MAT102', 'ENG101', 'CSE211', 'CSE221', 'CSE281', 'MAT201', 'PHY101'],
         'Course Title': ['Computer Fundamentals', 'Structured Prog.', 'OOP', 'Electrical Ckt', 'Diff Calc', 'Int Calc', 'English I', 'Data Structure', 'Algorithms', 'Digital Logic', 'Coord Geometry', 'Physics I'],
@@ -144,7 +141,6 @@ except:
 
 # ================= 4. SIDEBAR =================
 with st.sidebar:
-    # HTML Image with Error Handling (Fixes broken image issue)
     st.markdown(f"""
     <div class="profile-card">
         <div class="profile-img-container">
@@ -166,11 +162,11 @@ with st.sidebar:
         label_visibility="collapsed"
     )
     st.divider()
-    st.caption("© 2026 SEU Smart Portal | v10.0 Final")
+    st.caption("© 2026 SEU Smart Portal | v11.0 Ultimate")
 
 # ================= 5. MAIN CONTENT =================
 
-# --- 🏠 DASHBOARD ---
+# --- 🏠 DASHBOARD (SAME) ---
 if menu == "🏠 Dashboard":
     st.markdown("<div class='main-header'>Student Portal 🚀</div>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; color:#aaa;'>Academic Overview | Spring 2026</p>", unsafe_allow_html=True)
@@ -197,11 +193,9 @@ if menu == "🏠 Dashboard":
         st.subheader("📢 Notices")
         st.warning("💳 **Feb 15:** 2nd Installment Deadline")
 
-# --- 🧮 CGPA CALCULATOR (Advanced) ---
+# --- 🧮 CGPA CALCULATOR (SAME - ALREADY UPGRADED) ---
 elif menu == "🧮 CGPA Calculator":
     st.markdown("<div class='main-header'>🧮 Advanced CGPA Calculator</div>", unsafe_allow_html=True)
-    
-    # Toggle Reference
     with st.expander("ℹ️ View Grading Scale"):
         st.table(pd.DataFrame({
             "Marks": ["80+", "75-79", "70-74", "65-69", "60-64", "55-59", "50-54", "40-49", "<40"],
@@ -241,7 +235,6 @@ elif menu == "🧮 CGPA Calculator":
     if st.button("🚀 Calculate SGPA", type="primary"):
         total_cr = sum(credits_list)
         total_pts = sum(points_list)
-        
         if total_cr > 0:
             sgpa = total_pts / total_cr
             st.markdown(f"""
@@ -255,17 +248,12 @@ elif menu == "🧮 CGPA Calculator":
         else:
             st.error("Add at least one course.")
 
-# --- 📘 COURSE ADVISER (CRASH FIXED) ---
+# --- 📘 COURSE ADVISER (SAME - ALREADY UPGRADED) ---
 elif menu == "📘 Course Adviser":
     st.header("📘 Smart Course Adviser")
-    
-    # 🔴 FIX: Ensure Default Options Actually Exist in the List
     all_courses = curr_df['Course Code'].unique().tolist()
-    
-    # Only select defaults if they exist in the curriculum
     default_selection = ['CSE111', 'ENG101', 'MAT101']
     valid_defaults = [c for c in default_selection if c in all_courses]
-
     completed = st.multiselect("Completed Courses:", all_courses, default=valid_defaults)
     
     if st.button("Check Eligibility 🔍"):
@@ -273,9 +261,7 @@ elif menu == "📘 Course Adviser":
         for _, row in curr_df.iterrows():
             course = row['Course Code']
             prereqs = str(row['Prerequisite'])
-            
             if course in completed: continue
-            
             if prereqs == 'None' or prereqs == 'nan':
                 eligible.append(row)
             else:
@@ -289,12 +275,11 @@ elif menu == "📘 Course Adviser":
         else:
             st.warning("No new courses found.")
 
-# --- 📅 ROUTINE MAKER ---
+# --- 📅 ROUTINE MAKER (SAME) ---
 elif menu == "📅 Routine Maker":
     st.header("📅 Routine Generator")
     sample = pd.DataFrame({'Course String': ['CSE121.1', 'CSE121.2'], 'Faculty': ['Mr. A', 'Ms. B'], 'Day': ['Sun', 'Tue'], 'Time': ['08:30 AM', '10:00 AM']})
     st.download_button("📥 Download Sample", sample.to_csv(index=False).encode('utf-8'), "sample.csv")
-    
     uploaded_file = st.file_uploader("Upload UMS CSV", type=['csv'])
     if uploaded_file:
         try:
@@ -304,7 +289,6 @@ elif menu == "📅 Routine Maker":
             df['Start_DT'] = [t[0] for t in times]
             df['End_DT'] = [t[1] for t in times]
             df = df.dropna(subset=['Start_DT'])
-            
             selected = st.multiselect("Select Courses:", sorted(df['Course Code'].unique()))
             if st.button("Generate"):
                 relevant = df[df['Course Code'].isin(selected)]
@@ -316,29 +300,74 @@ elif menu == "📅 Routine Maker":
         except:
             st.error("Invalid File Format")
 
-# --- 💰 TUITION CALCULATOR ---
+# --- 💰 TUITION CALCULATOR (UPDATED & ADVANCED) ---
 elif menu == "💰 Tuition Calculator":
-    st.header("💸 Tuition Calculator")
-    rates = {"CSE": 4750, "EEE": 3450, "BBA": 4950}
+    st.markdown("<div class='main-header'>💸 Tuition & Payment Planner</div>", unsafe_allow_html=True)
+    st.markdown("Detailed breakdown for **Spring 2026** including Installment Plans.")
     
-    c1, c2 = st.columns(2)
-    with c1:
-        dept = st.selectbox("Department", list(rates.keys()))
-        cr = st.number_input("Credits", 3, 21, 12)
-        waiver = st.select_slider("Waiver %", [0, 20, 40, 50, 60, 100], value=20)
-    with c2:
-        sem_fee = st.number_input("Semester Fee", value=6000)
-        lab_fee = st.number_input("Lab Fee", value=2500)
+    rates = {"CSE": 4750, "EEE": 3450, "BBA": 4950, "English": 3700, "Pharmacy": 5350}
+    
+    # Advanced Options
+    with st.expander("⚙️ Calculation Settings", expanded=True):
+        c1, c2 = st.columns(2)
+        with c1:
+            dept = st.selectbox("Department", list(rates.keys()))
+            cr = st.number_input("Credits Taking", 3, 21, 15)
+            is_new = st.checkbox("I am a New Student (Add Admission Fee)")
+        with c2:
+            waiver = st.slider("Waiver Percentage (%)", 0, 100, 20, 5)
+            sem_fee = st.number_input("Semester Fee (Fixed)", value=6000)
+            lab_fee = st.number_input("Lab/Mid/Other Fee", value=3000)
 
-    net = (cr * rates[dept]) * ((100-waiver)/100)
-    total = net + sem_fee + lab_fee
-    st.markdown(f"<div class='result-card'><h1>Total: {total:,.0f} BDT</h1></div>", unsafe_allow_html=True)
+    # Calculations
+    tuition_gross = cr * rates[dept]
+    waiver_amount = tuition_gross * (waiver / 100)
+    tuition_net = tuition_gross - waiver_amount
+    admission_fee = 15000 if is_new else 0
+    total_payable = tuition_net + sem_fee + lab_fee + admission_fee
+    
+    # Installment Logic (Standard SEU Logic: 40% Mid, 60% Final approx)
+    inst_1 = total_payable * 0.40
+    inst_2 = total_payable * 0.60
+    
+    st.divider()
+    
+    # Visual Breakdown
+    k1, k2 = st.columns([1, 1.5])
+    with k1:
+        st.subheader("📊 Fee Breakdown")
+        fig = go.Figure(data=[go.Pie(
+            labels=['Net Tuition', 'Semester Fee', 'Lab/Other', 'Admission'], 
+            values=[tuition_net, sem_fee, lab_fee, admission_fee],
+            hole=.4,
+            marker_colors=['#00C6FF', '#FFD700', '#FF5733', '#C70039']
+        )])
+        fig.update_layout(height=300, margin=dict(t=0, b=0, l=0, r=0), paper_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig, use_container_width=True)
+        
+    with k2:
+        st.markdown(f"""
+        <div class="result-card" style="padding:20px; text-align:left;">
+            <h3 style="color:#aaa; text-align:center;">Total Payable Amount</h3>
+            <h1 style="color:#00C6FF; text-align:center; font-size:3.5rem; margin:0;">{total_payable:,.0f} BDT</h1>
+            <p style="text-align:center; color:#28a745;">You Saved: {waiver_amount:,.0f} BDT ({waiver}%)</p>
+            <hr style="border-color:#333;">
+            <h4 style="margin-bottom:15px;">📅 Payment Schedule (Tentative)</h4>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span><b>1st Installment (Before Mid):</b></span>
+                <span style="color:#FFD700;">{inst_1:,.0f} BDT</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span><b>2nd Installment (Before Final):</b></span>
+                <span style="color:#00C6FF;">{inst_2:,.0f} BDT</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# --- 🚌 BUS & MAP ---
+# --- 🚌 BUS & MAP (SAME) ---
 elif menu == "🚌 Bus & Map":
     st.header("🚌 Transport & Map")
     t1, t2 = st.tabs(["🗺️ Live Map", "📷 Route Images"])
-    
     with t1:
         st.info("🔴 SEU Campus | 🔵 Bus Stops")
         map_data = pd.DataFrame({
@@ -348,17 +377,49 @@ elif menu == "🚌 Bus & Map":
             'size': [1000, 200, 200]
         })
         st.map(map_data, zoom=11, size='size', color='color')
-        
     with t2:
         c1, c2 = st.columns(2)
-        # Using HTML img tag for fallback support
         with c1: st.markdown(f'<img src="{ROUTE_MAP_1}" width="100%" onerror="this.style.display=\'none\'">', unsafe_allow_html=True)
         with c2: st.markdown(f'<img src="{ROUTE_MAP_2}" width="100%" onerror="this.style.display=\'none\'">', unsafe_allow_html=True)
 
-# --- 👨‍🏫 FACULTY ---
+# --- 👨‍🏫 FACULTY INFO (UPDATED & ADVANCED) ---
 elif menu == "👨‍🏫 Faculty Info":
-    st.header("👨‍🏫 Faculty Directory")
-    st.table(pd.DataFrame([
-        {"Name": "Shahriar Manzoor", "Role": "Chairman", "Email": "cse.chair@seu.edu.bd"},
-        {"Name": "Dr. Gazi Zahirul", "Role": "Professor", "Email": "gazi.islam@seu.edu.bd"}
-    ]))
+    st.markdown("<div class='main-header'>👨‍🏫 Faculty Directory</div>", unsafe_allow_html=True)
+    
+    # Detailed Data
+    faculty_data = [
+        {"Name": "Shahriar Manzoor", "Designation": "Chairman & Assoc. Prof", "Room": "530", "Email": "cse.chair@seu.edu.bd", "Phone": "Ext: 666", "Area": "Networking"},
+        {"Name": "Dr. Gazi Zahirul Islam", "Designation": "Professor", "Room": "606", "Email": "gazi.islam@seu.edu.bd", "Phone": "N/A", "Area": "Signal Processing"},
+        {"Name": "Dr. Ashikur Rahman", "Designation": "Assoc. Professor", "Room": "529", "Email": "ashikur@seu.edu.bd", "Phone": "N/A", "Area": "AI & ML"},
+        {"Name": "Md. Shohel Babu", "Designation": "Coordinator & Lecturer", "Room": "301", "Email": "shohel.babu@seu.edu.bd", "Phone": "Ext: 671", "Area": "Software Eng."},
+        {"Name": "Lameya Islam", "Designation": "Lecturer", "Room": "302", "Email": "lameya@seu.edu.bd", "Phone": "N/A", "Area": "Data Science"},
+        {"Name": "Monirul Islam", "Designation": "Assistant Professor", "Room": "303", "Email": "monirul@seu.edu.bd", "Phone": "Ext: 669", "Area": "Cyber Security"},
+        {"Name": "Khandaker Mohi Uddin", "Designation": "Assistant Professor", "Room": "304", "Email": "mohiuddin@seu.edu.bd", "Phone": "N/A", "Area": "Algorithms"},
+    ]
+    
+    df_fac = pd.DataFrame(faculty_data)
+    
+    # Search Filter
+    search_term = st.text_input("🔍 Search Faculty by Name or Area:", "")
+    
+    if search_term:
+        df_fac = df_fac[df_fac.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)]
+    
+    # Display as styled cards (using HTML for better look)
+    st.write(f"Showing {len(df_fac)} faculty members:")
+    
+    for index, row in df_fac.iterrows():
+        st.markdown(f"""
+        <div style="background-color: #262730; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #00C6FF; display: flex; align-items: center;">
+            <div style="flex: 1;">
+                <h3 style="margin: 0; color: #fff;">{row['Name']}</h3>
+                <p style="margin: 0; color: #00C6FF; font-weight: bold;">{row['Designation']}</p>
+                <p style="margin: 5px 0 0 0; color: #aaa; font-size: 0.9rem;">🎓 Area: {row['Area']}</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin: 0;">🏢 Room: {row['Room']}</p>
+                <p style="margin: 0;">📞 {row['Phone']}</p>
+                <a href="mailto:{row['Email']}" style="color: #FFD700; text-decoration: none;">📧 Email Me</a>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
